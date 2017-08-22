@@ -1,11 +1,6 @@
 import random
 
-labirinti = [[0, 0, 0, 0, 0],
-             [0, -1, -1, -1, 0],
-             [0, 0, 0, -1, 0],
-             [0, -1, -1, -1, 0],
-             [0, 0, 0, 0, 0]]
-#0:zid, -1:prazno polje, 1:trenutni polozaj, 2:sir
+from labirinti import labirinti
 
 class Labirint:
 
@@ -28,7 +23,6 @@ class Labirint:
         self.matrika[self.polozaj_misi[0]][self.polozaj_misi[1]] = 1
         
         siri = []
-        mozni_polozaji = [] ##TODO nepotrebno
         
         while len(siri) < stevilo_sirov:
             #izbiramo nakljucna polja za sire, dokler polje ni veljavno (prazno)
@@ -45,10 +39,10 @@ class Labirint:
 class Igra:
 
     def __init__(self):
-        self.smer = None
+        self.smer = (0, 0)
         self.tocke = 10
         self.labirint = Labirint(labirinti)
-        self.osnovna_zanka()
+        #self.osnovna_zanka()
     
     def osnovna_zanka(self):
         while True:
@@ -86,12 +80,12 @@ class Igra:
                 self.tocke += 5
                 self.labirint.siri.pop(self.labirint.siri.index((y + d_y, x + d_x)))
             #premik uspel: prejsen polozaj -> prazno polje, nastavimo nov polozaj misi
-            ##TODO vrstni red
             self.labirint.matrika[self.labirint.polozaj_misi[0]][self.labirint.polozaj_misi[1]] = -1
             premik = True
             self.labirint.polozaj_misi = (y + d_y, x + d_x)
             self.labirint.matrika[self.labirint.polozaj_misi[0]][self.labirint.polozaj_misi[1]] = 1
-        self.izrisi_polja() 
+        #self.izrisi_polja()
+        self.smer = (0, 0)
         return premik
 
     def konec_igre(self):
@@ -107,20 +101,8 @@ class Igra:
     def izrisi_polja(self):
         for vrstica in self.labirint.matrika:
             print(vrstica)
-            
-        """"
-            if (x, y) in self.siri:
-                #Ko pridemo na mesto s sirom, sir izbrisemo, mis ostane.
-                self.siri -= (x, y)
-                self.tocke += 10
-                if self.siri == []:
-                    print('Konec igre')
-                    self.aktivno = False
-            if self.tocke == 0:
-                print('Izgubil si.')
-                self.aktivno = False
-                
-"""
 
-igra = Igra()
+if __name__ == '__main__':
+    pass
+    #igra = Igra()
         
