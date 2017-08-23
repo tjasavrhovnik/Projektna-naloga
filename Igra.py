@@ -1,4 +1,6 @@
 import tkinter as tk
+import sys
+import os
 
 #from Model import Labirint as lab
 from labirinti import labirinti
@@ -8,42 +10,49 @@ from Model import Igra as igra
 class Grafika:
 
     def __init__(self, okno):
+        pozicija = '330x360+100+100'
+        okno.geometry(pozicija)
         self.odmik = 4
+        self.zacetek(okno)
+
+    def zacetek(self, okno):
+        self.igra_tece = True
         self.igra = igra()
+        #print('tukaj')
         self.labirint = self.igra.labirint
         self.visina = self.labirint.visina * 40
         self.sirina = self.labirint.sirina * 40
-        self.zacetek(okno)
-        
-
-    def zacetek(self, okno):
         #prikaz = tk.Frame(okno)
         okno.bind('<Key>', self.uporabnikov_vnos)
         self.plosca = tk.Canvas(okno,
                                 width = self.sirina + 2 * self.odmik,
                                 height = self.visina + 2 * self.odmik)
-        self.plosca.grid(row = 1, column = 0, columnspan = 2)
-        #self.plosca.create_line(0, 0, 100, 100, fill = 'red')
-        gumb1 = tk.Button(okno, text = 'start', command = None)
+        self.plosca.grid(row = 1, column = 0, columnspan = 3)
+        gumb1 = tk.Button(okno, text = 'NOVA IGRA', command = lambda: self.resetiraj_igro(okno))
         gumb1.grid(row = 0, column = 0, sticky=tk.W+tk.E+tk.N+tk.S)
-        gumb2 = tk.Button(okno, text = 'konec', command = None)
-        gumb2.grid(row = 0, column = 1, sticky=tk.W+tk.E+tk.N+tk.S)
-
-        #self.plosca = tk.configure(background = 'white')
+        self.text1_variable = tk.StringVar()
+        text1 = tk.Label(okno, textvariable = self.text1_variable, height = 1, width = 10)
+        text1.grid(row = 0, column = 1, sticky=tk.W+tk.E+tk.N+tk.S)
+        self.text2_variable = tk.StringVar()
+        text2 = tk.Label(okno, textvariable = self.text2_variable, height = 1, width = 10, relief = tk.FLAT)
+        
+        text2.grid(row = 0, column = 2, sticky=tk.W+tk.E+tk.N+tk.S)
+        self.igra.izrisi_polja()
         self.mreza(okno)
         self.zapolni_polja(okno)
         self.osnovna_zanka(okno)
 
     def mreza(self, okno):
-        #print('mreza')
         for i in range(self.labirint.visina + 1):
-            self.plosca.create_line(self.odmik, i * self.visina/ self.labirint.visina + self.odmik,
-                                    self.visina + self.odmik, i * self.visina / self.labirint.visina + self.odmik,
+            self.plosca.create_line(self.odmik, i * self.visina / self.labirint.visina + self.odmik,
+                                    self.sirina + self.odmik, i * self.visina / self.labirint.visina + self.odmik,
                                     fill = 'black')
+           
         for i in range(self.labirint.sirina + 1):
-            self.plosca.create_line(i * self.sirina/ self.labirint.sirina + self.odmik, self.odmik,
-                                    i * self.sirina / self.labirint.sirina + self.odmik, self.sirina + self.odmik,
+            self.plosca.create_line(i * self.sirina / self.labirint.sirina + self.odmik, self.odmik,
+                                    i * self.sirina / self.labirint.sirina + self.odmik, self.visina + self.odmik,
                                     fill = 'black')
+          
 
     def zapolni_polja(self, okno):
         for y in range(len(self.labirint.matrika)):
@@ -88,14 +97,22 @@ class Grafika:
         #ce je premik uspesen, se odsteje tocka, mis premakne
         if uspesen_premik == True:
             self.igra.tocke -= 1
-        #print(self.igra.tocke)
+        self.text2_variable.set('TOČKE: ' + str(self.igra.tocke))
         #konec igre
-        if self.igra.konec_igre():
-            pass
-            #print('konec igre')
-        self.mreza(okno)
+        koncaj = self.igra.konec_igre()
+        if koncaj != 0:
+            if koncaj == 1:
+                self.text1_variable.set('Zmagal si!')
+            elif koncaj == -1:
+                self.text1_variable.set('Izgubil si!')
+            self.igra_tece = False
+        #self.mreza(okno)
         self.zapolni_polja(okno)
-        okno.after(100, lambda: self.osnovna_zanka(okno))
+
+        if self.igra_tece == True:
+            okno.after(100, lambda: self.osnovna_zanka(okno))
+        else:
+            print('konec')
 
     def uporabnikov_vnos(self, event):
         if event.keysym == 'w':
@@ -106,6 +123,14 @@ class Grafika:
             self.igra.smer = (0, -1) #levo
         elif event.keysym == 'd':
             self.igra.smer = (0, 1) #desno
+
+    def resetiraj_igro(self, okno):
+        #del self.igra
+        #del self.labirint
+        #self.plosca.delete('all')
+        #self.zacetek(okno)
+        python = sys.executable
+        os.execl(python, python, * sys.argv)
 
 okno = tk.Tk()
 
