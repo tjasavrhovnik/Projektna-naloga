@@ -7,39 +7,33 @@ class Labirint:
     #postavimo labirint, zacetni polozaj misi in sire
     
     def __init__(self, labirinti):
+        #n je stevilka labirinta
         n = random.randint(0, len(labirinti) - 1)
         self.matrika = []
         self.siri = []
         self.nova_igra(n, 3)
 
     def nova_igra(self, n, stevilo_sirov):
-        #n je stevilka labirinta(kasneje)
         self.matrika = labirinti[n]
-        #labirintov bo kasneje vec in bomo v []
-        #povedali kateri labirint uporabimo;
-        #labirinti zamenjamo z labirinti[i]
         self.visina = len(self.matrika)
         self.sirina = len(self.matrika[0])
 
-        self.polozaj_misi = (self.visina - 2, 1)
         #zacetni polozaj misi: levo spodaj
+        self.polozaj_misi = (self.visina - 2, 1)
         self.matrika[self.polozaj_misi[0]][self.polozaj_misi[1]] = 1
         
         siri = []
         
         while len(siri) < stevilo_sirov:
-            #print(siri)
             #izbiramo nakljucna polja za sire, dokler polje ni veljavno (prazno)
             tr_y = random.randint(0, self.visina - 1)
             tr_x = random.randint(0, self.sirina - 1)
             while self.matrika[tr_y][tr_x] != -1:
                 tr_y = random.randint(0, self.visina - 1)
                 tr_x = random.randint(0, self.sirina - 1)
-                #print(tr_y, tr_x)
             self.matrika[tr_y][tr_x] = 2
             siri.append((tr_y, tr_x))
         self.siri = siri
-        #self.narisi()
 
 class Igra:
 
@@ -47,7 +41,6 @@ class Igra:
         self.smer = (0, 0)
         self.tocke = 8
         self.labirint = Labirint(labirinti)
-        #self.osnovna_zanka()
     
     def osnovna_zanka(self):
         while True:
@@ -57,7 +50,6 @@ class Igra:
             #ce je premik uspesen, se odsteje tocka, mis premakne
             if uspesen_premik == True:
                 self.tocke -= 1
-            #print(self.tocke)
             #konec igre
             koncaj = self.konec_igre()
             if koncaj != 0:
@@ -93,11 +85,11 @@ class Igra:
             premik = True
             self.labirint.polozaj_misi = (y + d_y, x + d_x)
             self.labirint.matrika[self.labirint.polozaj_misi[0]][self.labirint.polozaj_misi[1]] = 1
-        #self.izrisi_polja()
         self.smer = (0, 0)
         return premik
 
     def konec_igre(self):
+        #ločimo ali igralec zmaga ali izgubi
         #zmanjkalo potez
         if self.tocke <= 0:
             return -1
@@ -105,7 +97,6 @@ class Igra:
         if len(self.labirint.siri) == 0:
             return 1
         return 0
-    ##TODO locimo da igralec zmaga ali izgubi
 
     def izrisi_polja(self):
         for vrstica in self.labirint.matrika:
@@ -113,5 +104,4 @@ class Igra:
 
 if __name__ == '__main__':
     pass
-    #igra = Igra()
         
