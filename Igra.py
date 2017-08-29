@@ -28,13 +28,16 @@ class Grafika:
                                 height = self.visina + 2 * self.odmik)
         self.plosca.grid(row = 1, column = 0, columnspan = 3)
 
+        #ta gumb kliknemo, ce zelimo zaceti novo igro
         gumb1 = tk.Button(okno, text = 'NOVA IGRA', command = lambda: self.resetiraj_igro(okno))
         gumb1.grid(row = 0, column = 0, sticky=tk.W+tk.E+tk.N+tk.S)
 
+        #tu se izpise rezultat (izgubljena igra/zmaga)
         self.text1_variable = tk.StringVar()
         text1 = tk.Label(okno, textvariable = self.text1_variable, height = 1, width = 10)
         text1.grid(row = 0, column = 1, sticky=tk.W+tk.E+tk.N+tk.S)
 
+        #tu stejemo tocke
         self.text2_variable = tk.StringVar()
         text2 = tk.Label(okno, textvariable = self.text2_variable, height = 1, width = 10, relief = tk.FLAT)
         text2.grid(row = 0, column = 2, sticky=tk.W+tk.E+tk.N+tk.S)
